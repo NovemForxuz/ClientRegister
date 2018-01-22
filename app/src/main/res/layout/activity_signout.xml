@@ -10,6 +10,7 @@
         android:id="@+id/linearLayout9"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:gravity="center"
         android:orientation="vertical"
         android:weightSum="14"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -61,36 +62,15 @@
             android:layout_height="wrap_content"
             android:layout_weight="1" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="9dp"
+        <RatingBar
+            android:id="@+id/ratingBar"
+            android:layout_width="wrap_content"
+            android:layout_height="4dp"
+            android:layout_gravity="center"
             android:layout_weight="2"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:paddingHorizontal="20dp"
-            tools:layout_editor_absoluteY="516dp">
-
-            <Button
-                android:id="@+id/signout_no"
-                android:layout_width="1dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:onClick="negativeBtn"
-                android:text="no thanks" />
-
-            <Space
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
-
-            <Button
-                android:id="@+id/signout_yes"
-                android:layout_width="15dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:onClick="positiveBtn"
-                android:text="sure!" />
-        </LinearLayout>
+            android:numStars="5"
+            android:rating="0"
+            android:stepSize="0.5" />
 
         <Space
             android:layout_width="match_parent"

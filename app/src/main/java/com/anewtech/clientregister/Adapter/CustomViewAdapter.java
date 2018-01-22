@@ -2,19 +2,7 @@ package com.anewtech.clientregister.Adapter;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
-import android.os.AsyncTask;
-import android.os.Handler;
-import android.os.Process;
-import android.provider.MediaStore;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,26 +12,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.anewtech.clientregister.Model.HostModel;
 import com.anewtech.clientregister.Model.StaffDetails;
-import com.anewtech.clientregister.Model.VisitorModel;
 import com.anewtech.clientregister.R;
 import com.squareup.picasso.Picasso;
 
-import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReferenceArray;
-
-import io.reactivex.Observable;
-import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by heriz on 9/1/2018.
@@ -52,10 +28,8 @@ import io.reactivex.schedulers.Schedulers;
 public class CustomViewAdapter extends BaseAdapter {
 
     private static CustomViewAdapter INSTANCE = null;
-
     private CustomViewAdapter() {}
-
-    public static CustomViewAdapter getInstance(){
+    public static synchronized CustomViewAdapter getInstance(){
         if(INSTANCE == null){
             INSTANCE = new CustomViewAdapter();
         }
@@ -74,7 +48,7 @@ public class CustomViewAdapter extends BaseAdapter {
 
     private Context context;
     private List<StaffDetails> staffnames;
-    public List<VisitorModel> hostdetails;
+    public List<HostModel> hostdetails;
 
     private int mSelectedItem;
     private boolean initial;
@@ -91,7 +65,7 @@ public class CustomViewAdapter extends BaseAdapter {
         this.staffnames = staffnames;
     }
 
-    public void initialize( List<VisitorModel> hostdetails){
+    public void initialize( List<HostModel> hostdetails){
         this.hostdetails = hostdetails;
     }
 
@@ -195,7 +169,7 @@ public class CustomViewAdapter extends BaseAdapter {
         }else {
             //host details from db
             if (hostdetails != null) {
-//                for(VisitorModel host : hostdetails){
+//                for(HostModel host : hostdetails){
 //                    String name = host.name;
 //                    String photourl = host.imgpath;
 //                    holder.staffname.setText(name);

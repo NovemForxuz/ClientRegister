@@ -1,13 +1,11 @@
 package com.anewtech.clientregister.Service;
 
-import android.content.Context;
-import android.os.Looper;
 import android.os.Process;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.anewtech.clientregister.Adapter.CustomViewAdapter;
-import com.anewtech.clientregister.Model.VisitorModel;
+import com.anewtech.clientregister.Model.HostModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -31,8 +29,8 @@ public class Host implements Runnable {
 
     FirebaseFirestore mRef;
 
-    List<VisitorModel> details;
-    VisitorModel vModel;
+    List<HostModel> details;
+    HostModel vModel;
     boolean isReady;
 
     CustomViewAdapter cva = CustomViewAdapter.getInstance();
@@ -56,15 +54,15 @@ public class Host implements Runnable {
                             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                 if (task.isSuccessful()) {
                                     for (DocumentSnapshot document : task.getResult()) {
-//                                        VisitorModel host =
+//                                        HostModel host =
 //                                        toLog("DocumentSnapshot added with ID: " + document.getId());
                                         toLog("DocumentSnapshot data: "+document.getData());
                                         String data = document.getData().toString();
-                                        vModel = new VisitorModel();
+                                        vModel = new HostModel();
                                         vModel.name = getName(data);
                                         vModel.imgpath = getPhotoUrl(data);
                                         details.add(vModel);
-                                        toLog("name"+vModel.name);
+                                        toLog("name: "+vModel.name);
 
                                         isReady = true;
 
@@ -86,7 +84,7 @@ public class Host implements Runnable {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(listObserver());
-//        for(VisitorModel vm : cva.hostdetails){
+//        for(HostModel vm : cva.hostdetails){
 //            toLog(vm.name);
 //        }
         toLog("Thread interrupted");
@@ -112,20 +110,20 @@ public class Host implements Runnable {
         return photolink;
     }
 
-    private Observable<List<VisitorModel>> listObservable(List<VisitorModel> list){
+    private Observable<List<HostModel>> listObservable(List<HostModel> list){
         return Observable.just(list);
     }
 
-    private Observer<List<VisitorModel>> listObserver(){
-        return new Observer<List<VisitorModel>>() {
+    private Observer<List<HostModel>> listObserver(){
+        return new Observer<List<HostModel>>() {
             @Override
             public void onSubscribe(Disposable d) {
 
             }
 
             @Override
-            public void onNext(List<VisitorModel> visitorModels) {
-                cva.initialize(visitorModels);
+            public void onNext(List<HostModel> hostModels) {
+                cva.initialize(hostModels);
             }
 
             @Override
@@ -140,7 +138,7 @@ public class Host implements Runnable {
         };
     }
 
-    //TODO: create methods to get all other elements in VisitorModel
+    //TODO: create methods to get all other elements in HostModel
 
     private void toLog(String msg){
         Log.e("Host", msg);

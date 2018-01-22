@@ -1,17 +1,9 @@
 package com.anewtech.clientregister.Fragment;
 
 import android.Manifest;
-import android.arch.lifecycle.ViewModelProviders;
-import android.content.Context;
-import android.content.ContextWrapper;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Matrix;
-import android.graphics.Paint;
-import android.media.MediaScannerConnection;
-import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -22,7 +14,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.Space;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,18 +27,27 @@ import android.widget.TextView;
 
 import com.anewtech.clientregister.Adapter.CustomViewAdapter;
 import com.anewtech.clientregister.Model.ClientInfoModel;
-import com.anewtech.clientregister.Model.StaffDataModel;
+import com.anewtech.clientregister.Model.VisitorModel;
 import com.anewtech.clientregister.R;
-import com.anewtech.clientregister.Service.StaffDataService;
+import com.anewtech.clientregister.Service.Api;
 import com.anewtech.clientregister.SignOutActivity;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 import static android.app.Activity.RESULT_OK;
+import static junit.framework.Assert.assertTrue;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -340,6 +340,13 @@ public class PlaceholderFragment extends Fragment {
                 public void onClick(View view) {
                     cim.setSignedIn(1,true);
                     cim.setSignedIn(0,false);
+
+                    try {
+                        postVisitorInfo(cim);
+                    } catch (JsonProcessingException e) {
+                        e.printStackTrace();
+                    }
+
                     TabLayout tab = mainView.getRootView().findViewById(R.id.tabs);
                     if(tab != null){
                         tab.getTabAt(0).select();
@@ -387,6 +394,8 @@ public class PlaceholderFragment extends Fragment {
         return image;
     }
 
+
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
@@ -408,6 +417,36 @@ public class PlaceholderFragment extends Fragment {
 
     private void toLog(String msg){
         Log.e("fragment", msg);
+    }
+
+    private void postVisitorInfo(ClientInfoModel clientInfoModel) throws JsonProcessingException {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://us-central1-vmsystem-4aa54.cloudfunctions.net/")
+                .build();
+
+        Api api = retrofit.create(Api.class);
+
+        ObjectMapper mapper = new ObjectMapper();
+        VisitorModel obj = new VisitorModel(clientInfoModel);
+        String jsonInString = "";
+        jsonInString = mapper.writeValueAsString(obj);
+
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonInString);
+        api.postVisitor(requestBody).enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                try {
+                    toLog("Retrofit: "+response.body().string());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                toLog(t.getMessage());
+            }
+        });
     }
 
 }

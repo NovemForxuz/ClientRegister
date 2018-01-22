@@ -15,7 +15,7 @@ public class ClientInfoModel {
 
     private static ClientInfoModel INSTANCE = null;
     private ClientInfoModel(){}
-    public static synchronized ClientInfoModel getInstance(){
+    public static ClientInfoModel getInstance(){
         if(INSTANCE == null){
             INSTANCE = new ClientInfoModel();
         }

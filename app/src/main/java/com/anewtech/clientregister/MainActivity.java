@@ -2,6 +2,7 @@ package com.anewtech.clientregister;
 
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
@@ -113,6 +114,17 @@ public class MainActivity extends AppCompatActivity {
 //        }else{
 //            toLog("File exist");
 //        }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        // recreate activity when NewClicked was just changed
+        if (getIntent().getBooleanExtra("NewClicked", false)) {
+            finish(); // finish and create a new Instance
+            Intent restarter = new Intent(MainActivity.this, MainActivity.class);
+            startActivity(restarter);
+        }
     }
 
     @Override
