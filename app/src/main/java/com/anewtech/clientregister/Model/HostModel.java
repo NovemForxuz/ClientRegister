@@ -1,5 +1,7 @@
 package com.anewtech.clientregister.Model;
 
+import java.util.List;
+
 /**
  * Database/visitor template
  */
@@ -17,5 +19,11 @@ public class HostModel {
 
     public HostModel(){
 
+    }
+
+    @Override
+    public String toString()
+    {
+        return "HostModel [position = "+position+", id = "+id+", ic = "+ic+", hp = "+hp+", imgpath = "+imgpath+", email = "+email+", address = "+address+", name = "+name+", company = "+company+"]";
     }
 }

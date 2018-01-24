@@ -12,13 +12,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.anewtech.clientregister.Model.HostDataModel;
 import com.anewtech.clientregister.Model.HostModel;
-import com.anewtech.clientregister.Model.StaffDetails;
 import com.anewtech.clientregister.R;
 import com.squareup.picasso.Picasso;
 
-import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -47,20 +45,17 @@ public class CustomViewAdapter extends BaseAdapter {
     }
 
     private Context context;
-    private List<StaffDetails> staffnames;
+    private HostDataModel staffnames;
     public List<HostModel> hostdetails;
 
     private int mSelectedItem;
     private boolean initial;
     private boolean isLoadedLocally = false;
     private PackageManager pm;
-    private String rootpath;
-    private ArrayList<String> imgNoNamae;
 
     private ViewHolder holder;
-    String img = "";
 
-    public void initialize(Context c, List<StaffDetails> staffnames){
+    public void initialize(Context c, HostDataModel staffnames){
         this.context = c;
         this.staffnames = staffnames;
     }
@@ -73,7 +68,7 @@ public class CustomViewAdapter extends BaseAdapter {
     public int getCount() {
         try {
             if (isLoadedLocally) {
-                return staffnames.size();
+                return staffnames.hostModels.size();
             }
             return hostdetails.size();
         }catch (NullPointerException e){
@@ -98,7 +93,7 @@ public class CustomViewAdapter extends BaseAdapter {
 
     public String getItemName(int i){
         if(isLoadedLocally){
-            return staffnames.get(i).name;
+            return staffnames.hostModels.get(i).name;
         }
         return hostdetails.get(i).name;
     }
@@ -147,34 +142,13 @@ public class CustomViewAdapter extends BaseAdapter {
         //staffnames from local json
         if(isLoadedLocally) {
             if (staffnames != null) {
-                holder.staffname.setText(this.staffnames.get(i).name);
-            }
-
-
-            //imgname from local img
-            if (imgNoNamae != null) {
-                for (int j = 0; j < imgNoNamae.size(); j++) {
-                    // This loop prevents indexOutOfBound error
-                    final int index = j;
-
-                    if (j == i) {
-                        img = imgNoNamae.get(i);
-                        toLog("rootpath: "+rootpath);
-                        toLog("img: "+img);
-                        File f = new File(rootpath + "/" + img);
-                        Picasso.with(context).load(f).into(holder.staffImg);
-                    }
-                }
+                holder.staffname.setText(this.staffnames.hostModels.get(i).name);
+                String url = staffnames.hostModels.get(i).imgpath;
+                Picasso.with(context).load(url).into(holder.staffImg);
             }
         }else {
             //host details from db
             if (hostdetails != null) {
-//                for(HostModel host : hostdetails){
-//                    String name = host.name;
-//                    String photourl = host.imgpath;
-//                    holder.staffname.setText(name);
-//                    Picasso.with(context).load(photourl).into(holder.staffImg);
-//                }
                 for(int j=0 ; j<hostdetails.size() ; j++){
                     if(j == i){
                         holder.staffname.setText(hostdetails.get(i).name);
@@ -185,14 +159,6 @@ public class CustomViewAdapter extends BaseAdapter {
         }
 
         return view;
-    }
-
-    public void getListofNames(ArrayList<String> names){
-        imgNoNamae = names;
-    }
-
-    public void setRootpath(String rootpath) {
-        this.rootpath = rootpath;
     }
 
     private void toLog(String msg){

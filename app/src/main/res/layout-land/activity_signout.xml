@@ -65,7 +65,7 @@
         <RatingBar
             android:id="@+id/ratingBar"
             android:layout_width="wrap_content"
-            android:layout_height="4dp"
+            android:layout_height="31dp"
             android:layout_gravity="center"
             android:layout_weight="2"
             android:numStars="5"

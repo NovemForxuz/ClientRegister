@@ -5,13 +5,19 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.anewtech.clientregister.Adapter.CustomViewAdapter;
+import com.anewtech.clientregister.Model.HostDataModel;
 import com.anewtech.clientregister.Model.HostModel;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import org.w3c.dom.Document;
+
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,14 +35,16 @@ public class Host implements Runnable {
 
     FirebaseFirestore mRef;
 
-    List<HostModel> details;
+    HostDataModel details;
     HostModel vModel;
+    File hoster;
     boolean isReady;
 
     CustomViewAdapter cva = CustomViewAdapter.getInstance();
 
-    public Host(FirebaseFirestore reference){
+    public Host(FirebaseFirestore reference, File file){
         mRef = reference;
+        hoster = file;
     }
 
     @Override
@@ -46,25 +54,49 @@ public class Host implements Runnable {
         while(!Thread.currentThread().isInterrupted()){
             try{
                 //Do something...
-                details = new ArrayList<>();
+                details = new HostDataModel();
                 mRef.collection("visitors")
                         .get()
                         .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                 if (task.isSuccessful()) {
-                                    for (DocumentSnapshot document : task.getResult()) {
-//                                        HostModel host =
-//                                        toLog("DocumentSnapshot added with ID: " + document.getId());
-                                        toLog("DocumentSnapshot data: "+document.getData());
+
+                                    //Save to file as json
+                                    int size = task.getResult().size();
+                                    for(int i=0; i < size; i++){
+                                        DocumentSnapshot document = task.getResult().getDocuments().get(i);
                                         String data = document.getData().toString();
                                         vModel = new HostModel();
                                         vModel.name = getName(data);
                                         vModel.imgpath = getPhotoUrl(data);
-                                        details.add(vModel);
+                                        vModel.address = getAddress(data);
+                                        vModel.company = getCompany(data);
+                                        vModel.email = getEmail(data);
+                                        vModel.hp = getHp(data);
+                                        vModel.ic = getIc(data);
+                                        vModel.id = getId(data);
+                                        vModel.position= getPosition(data);
+
+                                        details.hostModels.add(vModel);
                                         toLog("name: "+vModel.name);
 
                                         isReady = true;
+
+                                        ObjectMapper objMapper = new ObjectMapper();
+                                        if(i == size-1){
+
+                                            listObservable(details.hostModels)
+                                                    .subscribeOn(Schedulers.io())
+                                                    .observeOn(AndroidSchedulers.mainThread())
+                                                    .subscribe(listObserver());
+
+                                            try {
+                                                objMapper.writeValue(hoster, details);
+                                            } catch (IOException e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
 
                                     }
                                 } else {
@@ -79,11 +111,7 @@ public class Host implements Runnable {
                 Thread.currentThread().interrupt();
             }
         }
-        //TODO: add observables for details
-        listObservable(details)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(listObserver());
+
 //        for(HostModel vm : cva.hostdetails){
 //            toLog(vm.name);
 //        }
@@ -92,22 +120,6 @@ public class Host implements Runnable {
 
     public void stop(){
         Thread.currentThread().interrupt();
-    }
-
-    private String getName(String data){
-        int btm = data.indexOf("name=");
-        int upp = data.indexOf(", email");
-        String name = data.substring(btm+5, upp);
-        toLog("name: "+name);
-        return name;
-    }
-
-    private String getPhotoUrl(String data){
-        int btm = data.indexOf("imgpath=");
-        int upp = data.indexOf(", hp");
-        String photolink = data.substring(btm+8, upp);
-        toLog("photo url: "+photolink);
-        return photolink;
     }
 
     private Observable<List<HostModel>> listObservable(List<HostModel> list){
@@ -138,7 +150,72 @@ public class Host implements Runnable {
         };
     }
 
-    //TODO: create methods to get all other elements in HostModel
+    //TODO: create methods to get all elements in HostModel
+
+    private String getName(String data){
+        int btm = data.indexOf("name=");
+        int upp = data.indexOf(", email");
+        String name = data.substring(btm+5, upp);
+        toLog("name: "+name);
+        return name;
+    }
+
+    private String getPhotoUrl(String data){
+        int btm = data.indexOf("imgpath=");
+        int upp = data.indexOf(", hp");
+        String photolink = data.substring(btm+8, upp);
+        toLog("photo url: "+photolink);
+        return photolink;
+    }
+
+    private String getAddress(String data){
+        int btm = data.indexOf("address=");
+        int upp = data.indexOf(", id");
+        String address = data.substring(btm+8, upp);
+        return address;
+    }
+
+    private String getCompany(String data){
+        int btm = data.indexOf("company=");
+        int upp = data.indexOf(", ic");
+        String company = data.substring(btm+8, upp);
+        return company;
+    }
+
+    private String getEmail(String data){
+        int btm = data.indexOf("email=");
+        int upp = data.indexOf(", company");
+        String email = data.substring(btm+6, upp);
+        return email;
+    }
+
+    private String getHp(String data){
+        int btm = data.indexOf("hp=");
+        int upp = data.indexOf("}");
+        String hp = data.substring(btm+3, upp);
+        return hp;
+    }
+
+    private String getIc(String data){
+        int btm = data.indexOf("ic=");
+        int upp = data.indexOf(", position");
+        String ic = data.substring(btm+3, upp);
+        return ic;
+    }
+
+    private String getId(String data){
+        int btm = data.indexOf("id=");
+        int upp = data.indexOf(", name");
+        String id = data.substring(btm+3, upp);
+        return id;
+    }
+
+    private String getPosition(String data){
+        int btm = data.indexOf("position=");
+        int upp = data.indexOf(", imgpath");
+        String position = data.substring(btm+9, upp);
+        return position;
+    }
 
     private void toLog(String msg){
         Log.e("Host", msg);

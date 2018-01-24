@@ -1,48 +1,29 @@
 package com.anewtech.clientregister;
 
-import android.content.Context;
-import android.content.ContextWrapper;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
-import android.media.MediaScannerConnection;
-import android.net.Uri;
-import android.os.AsyncTask;
-import android.os.Environment;
 import android.support.design.widget.TabLayout;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AppCompatActivity;
 
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 
 import com.anewtech.clientregister.Adapter.CustomViewAdapter;
 import com.anewtech.clientregister.Adapter.SectionsPagerAdapter;
-import com.anewtech.clientregister.Fragment.PlaceholderFragment;
 import com.anewtech.clientregister.Model.ClientInfoModel;
-import com.anewtech.clientregister.Model.StaffDetails;
+import com.anewtech.clientregister.Model.HostDataModel;
 import com.anewtech.clientregister.Service.Api;
 import com.anewtech.clientregister.Service.Host;
 import com.anewtech.clientregister.Service.StaffDataService;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.io.InputStreamReader;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -71,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
     private ClientInfoModel cim = ClientInfoModel.getInstance();
     private FirebaseFirestore db;
     private Thread background;
-    private List<StaffDetails> details;
+    private HostDataModel details;
 
     private final String URL = "url";
 
@@ -94,19 +75,20 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
 
         db = FirebaseFirestore.getInstance();
-        Host host = new Host(db);
+        File hoster = new File(getExternalFilesDir("Hosts"), "hosts.json");
+        Host host = new Host(db, hoster);
         background = new Thread(host);
         background.start();
 
         sds = new StaffDataService();
-        sds.setJsonData(loadJsonFromAsset());
-        sds.toLog();
+        try {
+            sds.setJsonData(loadJsonFromFile());
 
-        checkForImgFile("theenigma_pp","image1");
-        checkForImgFile("staff_black", "jackBlack");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         initializeCva();
-        loadStaffImgFromStrg("StaffImages");
 
         resetClientInstance();
 //        if(!fileExistsInSD("jackBlack.png")){
@@ -137,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initializeCva(){
-        details = sds.getDetailsList();
+        details = sds.getHosts();
         cva = CustomViewAdapter.getInstance();
         cva.setInitial(true);
         cva.initialize(this, details);
@@ -181,114 +163,28 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public String loadJsonFromAsset(){
+    public String loadJsonFromFile()throws Exception{
         String json = null;
-        try{
-            InputStream is = getAssets().open("staffdetails.json");
-            int size = is.available();
-            byte[] buffer = new byte[size];
-            is.read(buffer);
-            is.close();
-            json = new String(buffer, "UTF-8");
+        File directory = new File(String.valueOf(getExternalFilesDir("Hosts")), "hosts.json");
+        FileInputStream fis;
+        try {
+            fis = new FileInputStream(directory);
+            json = convertStreamToString(fis);
+            fis.close();
+            toLog(json);
         }catch(IOException e){
-            Log.e("xxx",e.getMessage());
-            return null;
-        }
-        Log.e("xxx", json);
-        return json;
+            toLog(e.getMessage());
+        }return json;
     }
-
-    private void checkForImgFile(String resourceName, String imageName){
-        File file = new File("/StaffImages/c");
-        if(!file.exists()){
-            //Do something
-            toLog("File doesn't exist.");
-            int id = getBaseContext().getResources().getIdentifier(resourceName,"drawable", getPackageName());
-            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), id);
-            saveToInternalStorage(bitmap, imageName);
+    public static String convertStreamToString(InputStream is) throws Exception {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+        StringBuilder sb = new StringBuilder();
+        String line = null;
+        while ((line = reader.readLine()) != null) {
+            sb.append(line).append("\n");
         }
-        else{
-            //Nothing
-            toLog("Files exists.");
-        }
-    }
-
-    private Bitmap cropBitmapToSq(Bitmap srcBmp){
-        Bitmap dstBmp;
-        if (srcBmp.getWidth() >= srcBmp.getHeight()){
-
-            dstBmp = Bitmap.createBitmap(
-                    srcBmp,
-                    srcBmp.getWidth()/2 - srcBmp.getHeight()/2,
-                    0,
-                    srcBmp.getHeight(),
-                    srcBmp.getHeight()
-            );
-
-        }else{
-
-            dstBmp = Bitmap.createBitmap(
-                    srcBmp,
-                    0,
-                    srcBmp.getHeight()/2 - srcBmp.getWidth()/2,
-                    srcBmp.getWidth(),
-                    srcBmp.getWidth()
-            );
-        }
-
-        Bitmap image = Bitmap.createScaledBitmap(dstBmp, 400, 400, false);
-        return image;
-    }
-
-    private void saveToInternalStorage(Bitmap bitmapImage, String imageName){
-        //create StaffImages
-        File mypath = new File(getExternalFilesDir("StaffImages"), imageName+".png");
-        Bitmap cropSq = cropBitmapToSq(bitmapImage);
-        FileOutputStream fos = null;
-
-        try{
-            fos = new FileOutputStream(mypath);
-            //use the compress method on the Bitmap object to write image to the OutputStream
-            cropSq.compress(Bitmap.CompressFormat.PNG, 100, fos);
-        }catch(Exception e){
-            e.printStackTrace();
-        }finally {
-            try{
-                fos.close();
-            }catch (IOException e){
-                e.printStackTrace();
-            }
-        }
-
-        // Tell the media scanner about the new file so that it is
-        // immediately available to the user.
-        MediaScannerConnection.scanFile(getApplicationContext(), new String[]{mypath.toString()}, null,
-                new MediaScannerConnection.OnScanCompletedListener() {
-                    @Override
-                    public void onScanCompleted(String path, Uri uri) {
-                        toLog("Scanned " + path + ":");
-                        toLog("-> uri=" + uri);
-                    }
-                });
-
-//        return directory.getAbsolutePath();
-    }
-
-    //Pass to custom view adapter for staff image
-    public void loadStaffImgFromStrg(String path){
-        String img = "";
-        File directory = new File(String.valueOf(getExternalFilesDir(path)));
-        String rootpath = directory.getAbsolutePath();
-        cva.setRootpath(rootpath);
-        toLog("rootpath: "+rootpath);
-        //Get name of images
-        File[] files = directory.listFiles();
-        ArrayList<String> images = new ArrayList<>();
-        for(File file : files){
-            String imagenm = file.getName();
-            images.add(imagenm);
-        }
-        cva.getListofNames(images);
+        reader.close();
+        return sb.toString();
     }
 
     private void toLog(String msg){

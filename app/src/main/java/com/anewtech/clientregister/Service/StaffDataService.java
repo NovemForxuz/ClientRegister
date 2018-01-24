@@ -2,11 +2,8 @@ package com.anewtech.clientregister.Service;
 
 import android.util.Log;
 
-import com.anewtech.clientregister.Model.StaffDataModel;
-import com.anewtech.clientregister.Model.StaffDetails;
+import com.anewtech.clientregister.Model.HostDataModel;
 import com.google.gson.Gson;
-
-import java.util.List;
 
 /**
  * Created by heriz on 9/1/2018.
@@ -14,21 +11,21 @@ import java.util.List;
 
 public class StaffDataService {
     private Gson g;
-    private StaffDataModel sm;
+    private HostDataModel hmList;
 
     public StaffDataService(){
         g = new Gson();
     }
 
     public void setJsonData(String requiredJson){
-        sm = g.fromJson(requiredJson, StaffDataModel.class);
+        hmList = g.fromJson(requiredJson,  HostDataModel.class);
     }
 
-    public List<StaffDetails> getDetailsList(){
-        return sm.details;
+    public HostDataModel getHosts(){
+        return hmList;
     }
 
-    public void toLog(){
-        Log.e("from model", "uploadedby:"+sm.uploadedby);
+    public void intoString(){
+        Log.e("HostDataModel",hmList.hostModels.toString());
     }
 }

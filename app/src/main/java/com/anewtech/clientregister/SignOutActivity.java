@@ -49,6 +49,7 @@ public class SignOutActivity extends AppCompatActivity {
         rt = (RatingBar) findViewById(R.id.ratingBar);
 
         updateUI();
+        ratingBar();
     }
 
     @Override
@@ -85,7 +86,7 @@ public class SignOutActivity extends AppCompatActivity {
 //        handler.postDelayed(getRunnable(), 5000);
 //    }
 
-    public void ratingBar(View v){
+    public void ratingBar(){
         rt.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
