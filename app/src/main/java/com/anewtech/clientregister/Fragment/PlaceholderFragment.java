@@ -146,6 +146,7 @@ public class PlaceholderFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
                     Log.e("xxx", "Sign in test...");
+                    getCurrentTime();
                     cim.setSignedIn(0,true);
                     TabLayout tab = mainView.getRootView().findViewById(R.id.tabs);
                     if (tab != null) {
@@ -417,6 +418,33 @@ public class PlaceholderFragment extends Fragment {
 
     private void toLog(String msg){
         Log.e("fragment", msg);
+    }
+
+    private void getCurrentTime(){
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://us-central1-vmsystem-4aa54.cloudfunctions.net/")
+                .build();
+
+        Api api = retrofit.create(Api.class);
+
+        api.getPost().enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                if(response.isSuccessful() && response.body() != null){
+                    try{
+                        cim.setTimenow(response.body().string());
+                    }catch(IOException e){
+                        toLog("RetrofitError: "+response.errorBody());
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                toLog(t.getMessage());
+            }
+        });
     }
 
     private void postVisitorInfo(ClientInfoModel clientInfoModel) throws JsonProcessingException {

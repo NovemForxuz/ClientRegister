@@ -33,6 +33,7 @@ import io.reactivex.schedulers.Schedulers;
 
 public class Host implements Runnable {
 
+    private final boolean LOG_ON_HOST = false;
     FirebaseFirestore mRef;
 
     HostDataModel details;
@@ -55,7 +56,7 @@ public class Host implements Runnable {
             try{
                 //Do something...
                 details = new HostDataModel();
-                mRef.collection("visitors")
+                mRef.collection("hosts")
                         .get()
                         .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                             @Override
@@ -218,6 +219,8 @@ public class Host implements Runnable {
     }
 
     private void toLog(String msg){
-        Log.e("Host", msg);
+        if(LOG_ON_HOST){
+            Log.e("Host", msg);
+        }
     }
 }

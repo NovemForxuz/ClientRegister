@@ -10,6 +10,7 @@ public class VisitorModel {
     private String email;
     private String number;
     private String company;
+    private String timenow;
 
     public VisitorModel(){
 
@@ -20,6 +21,7 @@ public class VisitorModel {
         this.email = cm.getEmail();
         this.number = cm.getPhoneNo();
         this.company = cm.getCompanyName();
+        this.timenow = cm.getTimenow();
     }
 
     public String getName() {
@@ -37,4 +39,9 @@ public class VisitorModel {
     public String getCompany() {
         return company;
     }
+
+    public String getTimenow() {
+        return timenow;
+    }
+
 }

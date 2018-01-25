@@ -14,7 +14,7 @@ import retrofit2.http.POST;
  */
 
 public interface Api {
-    @GET("/posts")
+    @GET("/timenow")
     Call<ResponseBody> getPost();
 
     @POST("/echopost")

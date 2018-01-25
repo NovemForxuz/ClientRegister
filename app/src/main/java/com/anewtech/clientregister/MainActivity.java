@@ -54,8 +54,6 @@ public class MainActivity extends AppCompatActivity {
     private Thread background;
     private HostDataModel details;
 
-    private final String URL = "url";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -112,9 +110,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        if(cim.isSignedIn().get(1)){
-            finish();
-        }
         background.interrupt();
     }
 
@@ -134,33 +129,9 @@ public class MainActivity extends AppCompatActivity {
         cim.setCompanyName(null);
         cim.setStaffSeeking(null);
         cim.setPhotoId(null);
+        cim.setTimenow(null);
         cim.setSignedIn(0,false);
         cim.setSignedIn(1,false);
-    }
-
-    //Get json from internet
-    public void getJsonRetrofit(){
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(URL)
-                .build();
-
-        Api api = retrofit.create(Api.class);
-
-        api.getPost().enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                try{
-                    toLog("RetrofitExample: "+response.body().string());
-                }catch(IOException e){
-                    toLog("RetrofitError: "+response.errorBody());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-
-            }
-        });
     }
 
     public String loadJsonFromFile()throws Exception{

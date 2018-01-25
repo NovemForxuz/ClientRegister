@@ -28,6 +28,7 @@ public class ClientInfoModel {
     private String companyName;
     private String staffSeeking;
     private Bitmap photoId;
+    private String timenow;
     private ArrayList<Boolean> isSignedIn = new ArrayList<>(); //index: 0 - registering, 1 - signed in
 
     public String getName() {
@@ -76,6 +77,14 @@ public class ClientInfoModel {
 
     public void setPhotoId(Bitmap photoid) {
         this.photoId = photoid;
+    }
+
+    public String getTimenow() {
+        return timenow;
+    }
+
+    public void setTimenow(String timenow) {
+        this.timenow = timenow;
     }
 
     public ArrayList<Boolean> isSignedIn() {
