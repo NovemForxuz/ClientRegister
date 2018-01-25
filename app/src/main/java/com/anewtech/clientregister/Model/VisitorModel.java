@@ -11,6 +11,11 @@ public class VisitorModel {
     private String number;
     private String company;
     private String timenow;
+    private String imgpath;
+    private String position;
+    private String address;
+    private String ic;
+    private String hostid;
 
     public VisitorModel(){
 
@@ -22,6 +27,7 @@ public class VisitorModel {
         this.number = cm.getPhoneNo();
         this.company = cm.getCompanyName();
         this.timenow = cm.getTimenow();
+        this.hostid = cm.getHostId();
     }
 
     public String getName() {
@@ -42,6 +48,10 @@ public class VisitorModel {
 
     public String getTimenow() {
         return timenow;
+    }
+
+    public String getHostid() {
+        return hostid;
     }
 
 }

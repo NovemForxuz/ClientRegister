@@ -27,6 +27,7 @@ public class ClientInfoModel {
     private String phoneNo;
     private String companyName;
     private String staffSeeking;
+    private String hostId;
     private Bitmap photoId;
     private String timenow;
     private ArrayList<Boolean> isSignedIn = new ArrayList<>(); //index: 0 - registering, 1 - signed in
@@ -65,6 +66,14 @@ public class ClientInfoModel {
 
     public String getStaffSeeking() {
         return staffSeeking;
+    }
+
+    public String getHostId() {
+        return hostId;
+    }
+
+    public void setHostId(String hostId) {
+        this.hostId = hostId;
     }
 
     public void setStaffSeeking(String staffSeeking) {

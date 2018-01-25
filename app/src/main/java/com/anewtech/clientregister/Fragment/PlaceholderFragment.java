@@ -30,6 +30,7 @@ import com.anewtech.clientregister.Model.ClientInfoModel;
 import com.anewtech.clientregister.Model.VisitorModel;
 import com.anewtech.clientregister.R;
 import com.anewtech.clientregister.Service.Api;
+import com.anewtech.clientregister.Service.Post;
 import com.anewtech.clientregister.SignOutActivity;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -146,7 +147,7 @@ public class PlaceholderFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
                     Log.e("xxx", "Sign in test...");
-                    getCurrentTime();
+//                    getCurrentTime();
                     cim.setSignedIn(0,true);
                     TabLayout tab = mainView.getRootView().findViewById(R.id.tabs);
                     if (tab != null) {
@@ -342,11 +343,9 @@ public class PlaceholderFragment extends Fragment {
                     cim.setSignedIn(1,true);
                     cim.setSignedIn(0,false);
 
-                    try {
-                        postVisitorInfo(cim);
-                    } catch (JsonProcessingException e) {
-                        e.printStackTrace();
-                    }
+                  Post post = new Post();
+                  Thread postThread = new Thread(post);
+                  postThread.start();
 
                     TabLayout tab = mainView.getRootView().findViewById(R.id.tabs);
                     if(tab != null){
@@ -420,61 +419,61 @@ public class PlaceholderFragment extends Fragment {
         Log.e("fragment", msg);
     }
 
-    private void getCurrentTime(){
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://us-central1-vmsystem-4aa54.cloudfunctions.net/")
-                .build();
-
-        Api api = retrofit.create(Api.class);
-
-        api.getPost().enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
-                if(response.isSuccessful() && response.body() != null){
-                    try{
-                        cim.setTimenow(response.body().string());
-                    }catch(IOException e){
-                        toLog("RetrofitError: "+response.errorBody());
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                toLog(t.getMessage());
-            }
-        });
-    }
+//    private void getCurrentTime(){
+//        Retrofit retrofit = new Retrofit.Builder()
+//                .baseUrl("https://us-central1-vmsystem-4aa54.cloudfunctions.net/")
+//                .build();
+//
+//        Api api = retrofit.create(Api.class);
+//
+//        api.getPost().enqueue(new Callback<ResponseBody>() {
+//            @Override
+//            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+//
+//                if(response.isSuccessful() && response.body() != null){
+//                    try{
+//                        cim.setTimenow(response.body().string());
+//                    }catch(IOException e){
+//                        toLog("RetrofitError: "+response.errorBody());
+//                    }
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<ResponseBody> call, Throwable t) {
+//                toLog(t.getMessage());
+//            }
+//        });
+//    }
 
     private void postVisitorInfo(ClientInfoModel clientInfoModel) throws JsonProcessingException {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://us-central1-vmsystem-4aa54.cloudfunctions.net/")
-                .build();
-
-        Api api = retrofit.create(Api.class);
-
-        ObjectMapper mapper = new ObjectMapper();
-        VisitorModel obj = new VisitorModel(clientInfoModel);
-        String jsonInString = "";
-        jsonInString = mapper.writeValueAsString(obj);
-
-        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonInString);
-        api.postVisitor(requestBody).enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                try {
-                    toLog("Retrofit: "+response.body().string());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                toLog(t.getMessage());
-            }
-        });
+//        Retrofit retrofit = new Retrofit.Builder()
+//                .baseUrl("https://us-central1-vmsystem-4aa54.cloudfunctions.net/")
+//                .build();
+//
+//        Api api = retrofit.create(Api.class);
+//
+//        ObjectMapper mapper = new ObjectMapper();
+//        VisitorModel obj = new VisitorModel(clientInfoModel);
+//        String jsonInString = "";
+//        jsonInString = mapper.writeValueAsString(obj);
+//
+//        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonInString);
+//        api.postVisitor(requestBody).enqueue(new Callback<ResponseBody>() {
+//            @Override
+//            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+//                try {
+//                    toLog("Retrofit: "+response.body().string());
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<ResponseBody> call, Throwable t) {
+//                toLog(t.getMessage());
+//            }
+//        });
     }
 
 }
