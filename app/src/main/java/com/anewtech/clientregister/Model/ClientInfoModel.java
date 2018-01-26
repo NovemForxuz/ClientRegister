@@ -30,6 +30,7 @@ public class ClientInfoModel {
     private String hostId;
     private Bitmap photoId;
     private String timenow;
+    private String token;
     private ArrayList<Boolean> isSignedIn = new ArrayList<>(); //index: 0 - registering, 1 - signed in
 
     public String getName() {
@@ -98,6 +99,14 @@ public class ClientInfoModel {
 
     public ArrayList<Boolean> isSignedIn() {
         return isSignedIn;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 
     public void setSignedIn(int index, boolean signedIn) {

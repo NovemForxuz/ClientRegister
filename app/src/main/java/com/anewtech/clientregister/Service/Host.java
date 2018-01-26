@@ -29,6 +29,7 @@ import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by heriz on 17/1/2018.
+ * This class retrieve data from server
  */
 
 public class Host implements Runnable {

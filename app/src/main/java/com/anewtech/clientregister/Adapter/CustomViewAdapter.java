@@ -122,6 +122,10 @@ public class CustomViewAdapter extends BaseAdapter {
         this.pm = pm; // Get from Activity
     }
 
+    public String getHostId(){
+        return staffnames.hostModels.get(getmSelectedItem()).id;
+    }
+
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         if(view == null){

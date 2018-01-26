@@ -17,6 +17,6 @@ public interface Api {
     @GET("/timenow")
     Call<ResponseBody> getPost();
 
-    @POST("/echopost")
+    @POST("/postlogin")
     Call<ResponseBody> postVisitor(@Body RequestBody requestBody);
 }

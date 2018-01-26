@@ -49,4 +49,9 @@ Workers are responsible for:\n
 •  [LIST ANY OTHER SPECIFIC HEALTH AND SAFETY DUTIES THAT MANAGEMENT HAS].\n
 We expect visitors and contractors to:\n
 • [INCLUDE HOW YOU WANT THESE PEOPLE TO COMPLY WITH THIS POLICY AND THE PROCEDURES YOU HAVE THAT ENSURE HEALTH AND SAFETY AT YOUR WORKPLACE]\n</string>
+
+    <string name="login_description">"This token will be your id for your session."
+                "\nYou will need this for your logout. "</string>
+    <string name="login_warning">"PLEASE TAKE DOWN THIS VIRTUAL TOKEN"</string>
+    <string name="login_token">"(Token)"</string>
 </resources>

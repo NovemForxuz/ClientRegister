@@ -8,6 +8,7 @@ import com.anewtech.clientregister.Model.HostModel;
 import com.anewtech.clientregister.Model.VisitorModel;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.IOException;
 
@@ -26,6 +27,7 @@ import retrofit2.Retrofit;
 
 /**
  * Created by heriz on 25/1/2018.
+ * This class sends data back to server
  */
 
 public class Post implements Runnable {
@@ -33,8 +35,12 @@ public class Post implements Runnable {
     private final boolean LOG_ON_POST = true;
 
     private ClientInfoModel cim = ClientInfoModel.getInstance();
+    private FirebaseFirestore ff;
+    private Observer<String> observer;
 
-    public Post(){
+    public Post(FirebaseFirestore ff, Observer<String> observer){
+        this.ff = ff;
+        this.observer = observer;
     }
 
     @Override
@@ -56,7 +62,7 @@ public class Post implements Runnable {
         Thread.currentThread().interrupt();
     }
 
-    private Observable<String> cimObservable(String time){
+    private Observable<String> timeObservable(String time){
         return Observable.just(time);
     }
 
@@ -104,7 +110,7 @@ public class Post implements Runnable {
 
                 if(response.isSuccessful() && response.body() != null){
                     try{
-                        cimObservable(response.body().string())
+                        timeObservable(response.body().string())
                                 .subscribeOn(Schedulers.io())
                                 .observeOn(AndroidSchedulers.mainThread())
                                 .subscribe(timeObserver());
@@ -126,6 +132,7 @@ public class Post implements Runnable {
     private void postVisitorInfo(ClientInfoModel cmodel){
         Retrofit retrofitPost = new Retrofit.Builder()
                 .baseUrl("https://us-central1-vmsystem-4aa54.cloudfunctions.net/")
+//                .baseUrl("https://us-central1-vmsystem-4aa54.cloudfunctions.net/")
                 .build();
 
         Api apiPost = retrofitPost.create(Api.class);
@@ -148,6 +155,16 @@ public class Post implements Runnable {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+
+                try {
+                    Thread.sleep(7000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                Token token = new Token(ff,observer);
+                Thread thread = new Thread(token);
+                thread.start();
             }
 
             @Override
