@@ -1,20 +1,28 @@
 package com.anewtech.clientregister.Model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Created by heriz on 22/1/2018.
  */
 
 public class VisitorModel {
 
+    @JsonProperty("name")
     private String name;
+    @JsonProperty("email")
     private String email;
+    @JsonProperty("number")
     private String number;
+    @JsonProperty("company")
     private String company;
+    @JsonProperty("timenow")
     private String timenow;
     private String imgpath;
     private String position;
     private String address;
     private String ic;
+    @JsonProperty("hostid")
     private String hostid;
 
     public VisitorModel(){

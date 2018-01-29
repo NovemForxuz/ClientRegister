@@ -56,6 +56,7 @@
             android:layout_width="178dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:onClick="confirmLogin"
             android:text="\u2713 Noted"
             tools:layout_editor_absoluteX="0dp"
             tools:layout_editor_absoluteY="304dp" />

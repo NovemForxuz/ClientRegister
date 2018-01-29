@@ -69,11 +69,12 @@ public class Host implements Runnable {
                                     for(int i=0; i < size; i++){
                                         DocumentSnapshot document = task.getResult().getDocuments().get(i);
                                         String data = document.getData().toString();
+                                        toLog(data);
                                         vModel = new HostModel();
                                         vModel.name = getName(data);
                                         vModel.imgpath = getPhotoUrl(data);
-                                        vModel.address = getAddress(data);
-                                        vModel.company = getCompany(data);
+//                                        vModel.address = getAddress(data);
+                                        vModel.company = getCompanyId(data);
                                         vModel.email = getEmail(data);
                                         vModel.hp = getHp(data);
                                         vModel.ic = getIc(data);
@@ -156,7 +157,7 @@ public class Host implements Runnable {
 
     private String getName(String data){
         int btm = data.indexOf("name=");
-        int upp = data.indexOf(", email");
+        int upp = data.indexOf(", ic");
         String name = data.substring(btm+5, upp);
         toLog("name: "+name);
         return name;
@@ -164,29 +165,29 @@ public class Host implements Runnable {
 
     private String getPhotoUrl(String data){
         int btm = data.indexOf("imgpath=");
-        int upp = data.indexOf(", hp");
+        int upp = data.indexOf(", companyid");
         String photolink = data.substring(btm+8, upp);
         toLog("photo url: "+photolink);
         return photolink;
     }
 
-    private String getAddress(String data){
-        int btm = data.indexOf("address=");
-        int upp = data.indexOf(", id");
-        String address = data.substring(btm+8, upp);
-        return address;
-    }
+//    private String getAddress(String data){
+//        int btm = data.indexOf("address=");
+//        int upp = data.indexOf(", id");
+//        String address = data.substring(btm+8, upp);
+//        return address;
+//    }
 
-    private String getCompany(String data){
-        int btm = data.indexOf("company=");
-        int upp = data.indexOf(", ic");
+    private String getCompanyId(String data){
+        int btm = data.indexOf("companyid=");
+        int upp = data.indexOf(", hp");
         String company = data.substring(btm+8, upp);
         return company;
     }
 
     private String getEmail(String data){
-        int btm = data.indexOf("email=");
-        int upp = data.indexOf(", company");
+        int btm = data.indexOf("pemail=");
+        int upp = data.indexOf(", name");
         String email = data.substring(btm+6, upp);
         return email;
     }
@@ -207,7 +208,7 @@ public class Host implements Runnable {
 
     private String getId(String data){
         int btm = data.indexOf("id=");
-        int upp = data.indexOf(", name");
+        int upp = data.indexOf(", pemail");
         String id = data.substring(btm+3, upp);
         return id;
     }

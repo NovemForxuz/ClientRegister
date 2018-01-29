@@ -1,5 +1,7 @@
 package com.anewtech.clientregister.Model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.List;
 
 /**
@@ -7,7 +9,6 @@ import java.util.List;
  */
 
 public class HostModel {
-    public String address;
     public String company;
     public String email;
     public String hp;
@@ -24,6 +25,6 @@ public class HostModel {
     @Override
     public String toString()
     {
-        return "HostModel [position = "+position+", id = "+id+", ic = "+ic+", hp = "+hp+", imgpath = "+imgpath+", email = "+email+", address = "+address+", name = "+name+", company = "+company+"]";
+        return "HostModel [position = "+position+", id = "+id+", ic = "+ic+", hp = "+hp+", imgpath = "+imgpath+", email = "+email+", name = "+name+", company = "+company+"]";
     }
 }

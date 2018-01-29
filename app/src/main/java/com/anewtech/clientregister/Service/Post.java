@@ -142,6 +142,7 @@ public class Post implements Runnable {
         String jsonInString = "";
         try {
             jsonInString = mapper.writeValueAsString(obj);
+            toLog("jsoninstring: "+jsonInString);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
@@ -153,12 +154,6 @@ public class Post implements Runnable {
                 try {
                     toLog("Retrofit: "+response.body().string());
                 } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                try {
-                    Thread.sleep(7000);
-                } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
 

@@ -24,7 +24,7 @@ public class ClientInfoModel {
 
     private String name;
     private String email;
-    private String phoneNo;
+    private String hp;
     private String companyName;
     private String staffSeeking;
     private String hostId;
@@ -50,11 +50,11 @@ public class ClientInfoModel {
     }
 
     public String getPhoneNo() {
-        return phoneNo;
+        return hp;
     }
 
     public void setPhoneNo(String phoneNo) {
-        this.phoneNo = phoneNo;
+        this.hp = phoneNo;
     }
 
     public String getCompanyName() {

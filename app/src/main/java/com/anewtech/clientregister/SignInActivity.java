@@ -49,16 +49,23 @@ public class SignInActivity extends AppCompatActivity {
 
         TextView desc = findViewById(R.id.desc_tv);
 
-        Button confirm = findViewById(R.id.cofirmLoginBtn);
-        confirm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(SignInActivity.this, MainActivity.class);
-                intent.putExtra("NewClicked", true);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-            }
-        });
+//        Button confirm = findViewById(R.id.cofirmLoginBtn);
+//        confirm.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent intent = new Intent(SignInActivity.this, MainActivity.class);
+//                intent.putExtra("NewClicked", true);
+//                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                startActivity(intent);
+//            }
+//        });
+    }
+
+    public void confirmLogin(View v){
+        Intent intent = new Intent(SignInActivity.this, MainActivity.class);
+        intent.putExtra("NewClicked", true);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
     }
 
     public Observer<String> observer(){

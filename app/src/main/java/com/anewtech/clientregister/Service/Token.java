@@ -29,6 +29,8 @@ public class Token implements Runnable {
     private Observer<String> Observer;
     private FirebaseFirestore mRef;
 
+    private boolean isTokenGenerated = false;
+
     public Token(FirebaseFirestore mRef, Observer<String> Observer){
         this.Observer = Observer;
         this.mRef = mRef;
@@ -40,6 +42,7 @@ public class Token implements Runnable {
         toLog("Thread started");
         while (!Thread.currentThread().isInterrupted()) {
             try{
+                Thread.sleep(5000);
                 mRef.collection("logs").get()
                         .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                             @Override
@@ -56,14 +59,30 @@ public class Token implements Runnable {
 //                                            toLog("Now: "+currentTime);
                                             if(time.equals(cm.getTimenow())){
                                                 toLog("Got it");
+                                                isTokenGenerated = true;
                                                 observable(document.get("vtoken").toString())
                                                         .subscribeOn(Schedulers.io())
                                                         .observeOn(AndroidSchedulers.mainThread())
                                                         .subscribe(Observer);
+
                                                 break;
                                             }
                                         }
-
+                                    }
+                                    if(isTokenGenerated){
+                                        stop();
+                                    }else{
+                                        try {
+                                            Thread.sleep(1500);
+                                        } catch (InterruptedException e) {
+                                            e.printStackTrace();
+                                        }
+                                        run();
+                                    }
+                                    try {
+                                        Thread.sleep(2000);
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
                                     }
                                 }else {
                                     toLog("not sucessfull: "+task.getException());

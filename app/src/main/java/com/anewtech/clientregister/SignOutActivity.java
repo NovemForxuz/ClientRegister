@@ -43,10 +43,10 @@ public class SignOutActivity extends AppCompatActivity {
         phoneNo = getIntent().getStringExtra("phoneno");
         company = getIntent().getStringExtra("company");
 
-        title = (TextView) findViewById(R.id.signout_title);
-        tv = (TextView) findViewById(R.id.signout_tv);
-        tv2 = (TextView) findViewById(R.id.signout_tv2);
-        rt = (RatingBar) findViewById(R.id.ratingBar);
+        title = findViewById(R.id.signout_title);
+        tv = findViewById(R.id.signout_tv);
+        tv2 = findViewById(R.id.signout_tv2);
+        rt = findViewById(R.id.ratingBar);
 
         updateUI();
         ratingBar();

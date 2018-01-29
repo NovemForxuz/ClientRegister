@@ -121,7 +121,7 @@ public class PlaceholderFragment extends Fragment {
         }
         else {
             rootView = inflater.inflate(R.layout.fragment_main, container, false);
-            TextView textView = (TextView) rootView.findViewById(R.id.section_label);
+            TextView textView = rootView.findViewById(R.id.section_label);
             textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
         }
         initialiseUI(rootView);
@@ -186,7 +186,7 @@ public class PlaceholderFragment extends Fragment {
             }
         }
 
-        android.widget.Space tab1space = (android.widget.Space) mainView.findViewById(R.id.tab1space);
+        android.widget.Space tab1space = mainView.findViewById(R.id.tab1space);
         if(tab1space != null){
             if(cim.isSignedIn().get(1)){
                 tab1space.setVisibility(View.GONE);
