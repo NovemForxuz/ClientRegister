@@ -9,8 +9,8 @@ import java.util.List;
  */
 
 public class HostModel {
-    public String company;
-    public String email;
+    public String companyid;
+    public String pemail;
     public String hp;
     public String ic;
     public String id;
@@ -25,6 +25,6 @@ public class HostModel {
     @Override
     public String toString()
     {
-        return "HostModel [position = "+position+", id = "+id+", ic = "+ic+", hp = "+hp+", imgpath = "+imgpath+", email = "+email+", name = "+name+", company = "+company+"]";
+        return "HostModel [position = "+position+", id = "+id+", ic = "+ic+", hp = "+hp+", imgpath = "+imgpath+", email = "+pemail+", name = "+name+", company = "+companyid+"]";
     }
 }

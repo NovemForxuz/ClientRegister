@@ -3,19 +3,18 @@ package com.anewtech.clientregister;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Button;
+import android.view.WindowManager;
 import android.widget.TextView;
 
+import com.anewtech.clientregister.Model.ClientInfoModel;
 import com.anewtech.clientregister.Model.LoginViewModel;
-import com.anewtech.clientregister.Service.Post;
-import com.anewtech.clientregister.Service.Token;
+import com.anewtech.clientregister.Service.PostLogin;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.qihancloud.opensdk.base.TopBaseActivity;
 
-import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 
@@ -23,24 +22,32 @@ import io.reactivex.disposables.Disposable;
  * Created by heriz on 11/1/2018.
  */
 
-public class SignInActivity extends AppCompatActivity {
+public class SignInActivity extends TopBaseActivity {
 
     LoginViewModel lvModel;
+    ClientInfoModel cim = ClientInfoModel.getInstance();
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signin);
+
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON, WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         lvModel = ViewModelProviders.of(this).get(LoginViewModel.class);
 
         FirebaseFirestore ff = FirebaseFirestore.getInstance();
 
-        Post post = new Post(ff, observer());
-        Thread postThread = new Thread(post);
+        PostLogin postLogin = new PostLogin(ff, observer());
+        Thread postThread = new Thread(postLogin);
         postThread.start();
 
         initializeUI();
+    }
+
+    @Override
+    protected void onMainServiceConnected() {
+
     }
 
     private void initializeUI(){
@@ -80,6 +87,7 @@ public class SignInActivity extends AppCompatActivity {
                 setContentView(R.layout.activity_signin);
                 TextView tokentv = findViewById(R.id.token_tv);
                 tokentv.setText(s);
+                cim.setToken(s);
                 TextView warntv = findViewById(R.id.loginwarning_tv);
                 warntv.setText(R.string.login_warning);
                 int color = getResources().getColor(R.color.colorAccent);

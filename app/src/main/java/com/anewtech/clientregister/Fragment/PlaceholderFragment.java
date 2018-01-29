@@ -3,7 +3,6 @@ package com.anewtech.clientregister.Fragment;
 import android.Manifest;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -27,26 +26,11 @@ import android.widget.TextView;
 
 import com.anewtech.clientregister.Adapter.CustomViewAdapter;
 import com.anewtech.clientregister.Model.ClientInfoModel;
-import com.anewtech.clientregister.Model.VisitorModel;
 import com.anewtech.clientregister.R;
-import com.anewtech.clientregister.Service.Api;
-import com.anewtech.clientregister.Service.Post;
 import com.anewtech.clientregister.SignInActivity;
 import com.anewtech.clientregister.SignOutActivity;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.File;
-import java.io.IOException;
-
-import okhttp3.MediaType;
-import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 import static android.app.Activity.RESULT_OK;
 import static junit.framework.Assert.assertTrue;
@@ -179,11 +163,6 @@ public class PlaceholderFragment extends Fragment {
 
                 }
             });
-            if(!cim.isSignedIn().get(1)){
-                signOut.setClickable(false);
-            }else{
-                signOut.setClickable(true);
-            }
         }
 
         android.widget.Space tab1space = mainView.findViewById(R.id.tab1space);

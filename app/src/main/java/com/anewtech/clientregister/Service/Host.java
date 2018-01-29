@@ -74,8 +74,8 @@ public class Host implements Runnable {
                                         vModel.name = getName(data);
                                         vModel.imgpath = getPhotoUrl(data);
 //                                        vModel.address = getAddress(data);
-                                        vModel.company = getCompanyId(data);
-                                        vModel.email = getEmail(data);
+                                        vModel.companyid = getCompanyId(data);
+                                        vModel.pemail = getEmail(data);
                                         vModel.hp = getHp(data);
                                         vModel.ic = getIc(data);
                                         vModel.id = getId(data);
@@ -181,14 +181,14 @@ public class Host implements Runnable {
     private String getCompanyId(String data){
         int btm = data.indexOf("companyid=");
         int upp = data.indexOf(", hp");
-        String company = data.substring(btm+8, upp);
+        String company = data.substring(btm+10, upp);
         return company;
     }
 
     private String getEmail(String data){
         int btm = data.indexOf("pemail=");
         int upp = data.indexOf(", name");
-        String email = data.substring(btm+6, upp);
+        String email = data.substring(btm+7, upp);
         return email;
     }
 

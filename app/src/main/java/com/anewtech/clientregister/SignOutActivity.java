@@ -7,104 +7,65 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.RatingBar;
 import android.widget.TextView;
+
+import com.anewtech.clientregister.Model.ClientInfoModel;
+import com.anewtech.clientregister.Service.PostLogout;
+import com.qihancloud.opensdk.base.TopBaseActivity;
 
 /**
  * Created by heriz on 11/1/2018.
  */
 
-public class SignOutActivity extends AppCompatActivity {
+public class SignOutActivity extends TopBaseActivity {
 
     private static final boolean LOG_ON_SIGN_OUT = true;
 
-    private String name;
-    private String email;
-    private String phoneNo;
-    private String company;
-
-    private TextView title;
-    private TextView tv;
-    private TextView tv2;
-    private RatingBar rt;
-
-    private Handler handler;
+    private EditText uToken;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signout);
 
-        handler = new Handler();
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON, WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        name = getIntent().getStringExtra("name");
-        email = getIntent().getStringExtra("email");
-        phoneNo = getIntent().getStringExtra("phoneno");
-        company = getIntent().getStringExtra("company");
-
-        title = findViewById(R.id.signout_title);
-        tv = findViewById(R.id.signout_tv);
-        tv2 = findViewById(R.id.signout_tv2);
-        rt = findViewById(R.id.ratingBar);
-
-        updateUI();
-        ratingBar();
+        uToken = findViewById(R.id.logout_token);
     }
 
     @Override
-    protected void onPause() {
+    public void onPause() {
         super.onPause();
         finish();
     }
 
-    private void updateUI(){
-        title.setText("You have Signed out");
-        tv.setText(
-                "Name: " + name +
-                "\nEmail: " + email +
-                "\nPhone no.: " + phoneNo +
-                "\nCompany: " + company
-        );
-
-        tv2.setText("Rate this app");
+    @Override
+    protected void onMainServiceConnected() {
 
     }
 
-//    public void negativeBtn(View v){
-//        tv2.setText("Thank you. Have a nice day!");
-//        positiveBtn.setVisibility(View.GONE);
-//        negativeBtn.setVisibility(View.GONE);
-//        handler.postDelayed(getRunnable(), 5000);
-//    }
-//
-//    public void positiveBtn(View v){
-//        tv2.setText("");
-//        tv2.setHint("launch a dialog feedback dialog box");
-//        positiveBtn.setVisibility(View.GONE);
-//        negativeBtn.setVisibility(View.GONE);
-//        handler.postDelayed(getRunnable(), 5000);
-//    }
-
-    public void ratingBar(){
-        rt.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
-            @Override
-            public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
-                tv2.setText("Thank you for your feedback!");
-                handler.postDelayed(getRunnable(),3000);
-            }
-        });
+    public String getToken(){
+        String token = "";
+        token = uToken.getText().toString();
+         if(token != null && !token.equals("")){
+             return token;
+         }
+         return "empty";
     }
-    private Runnable getRunnable(){
-        return new Runnable() {
-            @Override
-            public void run() {
-                Intent intent = new Intent(SignOutActivity.this, MainActivity.class);
-                intent.putExtra("NewClicked", true);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-            }
-        };
+
+    public void logout(View v){
+        PostLogout postLogout = new PostLogout(getToken());
+        Thread thread = new Thread(postLogout);
+        thread.start();
+
+        Intent intent = new Intent(SignOutActivity.this, MainActivity.class);
+        intent.putExtra("NewClicked", true);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
     }
 
     private void toLog(String msg){

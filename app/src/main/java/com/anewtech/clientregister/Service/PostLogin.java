@@ -30,7 +30,7 @@ import retrofit2.Retrofit;
  * This class sends data back to server
  */
 
-public class Post implements Runnable {
+public class PostLogin implements Runnable {
 
     private final boolean LOG_ON_POST = true;
 
@@ -38,7 +38,7 @@ public class Post implements Runnable {
     private FirebaseFirestore ff;
     private Observer<String> observer;
 
-    public Post(FirebaseFirestore ff, Observer<String> observer){
+    public PostLogin(FirebaseFirestore ff, Observer<String> observer){
         this.ff = ff;
         this.observer = observer;
     }
@@ -171,7 +171,7 @@ public class Post implements Runnable {
 
     private void toLog(String msg){
         if(LOG_ON_POST){
-            Log.e("Post", msg);
+            Log.e("PostLogin", msg);
         }
     }
 }

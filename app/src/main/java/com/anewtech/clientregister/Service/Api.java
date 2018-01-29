@@ -19,4 +19,7 @@ public interface Api {
 
     @POST("/postlogin")
     Call<ResponseBody> postVisitor(@Body RequestBody requestBody);
+
+    @POST("/postlogout")
+    Call<ResponseBody> postLogout(@Body RequestBody requestBody);
 }
