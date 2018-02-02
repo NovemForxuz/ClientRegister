@@ -68,18 +68,19 @@ public class Host implements Runnable {
                                     int size = task.getResult().size();
                                     for(int i=0; i < size; i++){
                                         DocumentSnapshot document = task.getResult().getDocuments().get(i);
-                                        String data = document.getData().toString();
-                                        toLog(data);
-                                        vModel = new HostModel();
-                                        vModel.name = getName(data);
-                                        vModel.imgpath = getPhotoUrl(data);
-//                                        vModel.address = getAddress(data);
-                                        vModel.companyid = getCompanyId(data);
-                                        vModel.pemail = getEmail(data);
-                                        vModel.hp = getHp(data);
-                                        vModel.ic = getIc(data);
-                                        vModel.id = getId(data);
-                                        vModel.position= getPosition(data);
+                                        vModel = document.toObject(HostModel.class);
+//                                        String data = document.getData().toString();
+//                                        toLog(data);
+//                                        vModel = new HostModel();
+//                                        vModel.name = getName(data);
+//                                        vModel.imgpath = getPhotoUrl(data);
+////                                        vModel.address = getAddress(data);
+//                                        vModel.companyid = getCompanyId(data);
+//                                        vModel.pemail = getEmail(data);
+//                                        vModel.hp = getHp(data);
+//                                        vModel.ic = getIc(data);
+//                                        vModel.id = getId(data);
+//                                        vModel.position= getPosition(data);
 
                                         details.hostModels.add(vModel);
                                         toLog("name: "+vModel.name);
