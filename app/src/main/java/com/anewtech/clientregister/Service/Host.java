@@ -64,23 +64,10 @@ public class Host implements Runnable {
                             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                 if (task.isSuccessful()) {
 
-                                    //Save to file as json
                                     int size = task.getResult().size();
                                     for(int i=0; i < size; i++){
                                         DocumentSnapshot document = task.getResult().getDocuments().get(i);
                                         vModel = document.toObject(HostModel.class);
-//                                        String data = document.getData().toString();
-//                                        toLog(data);
-//                                        vModel = new HostModel();
-//                                        vModel.name = getName(data);
-//                                        vModel.imgpath = getPhotoUrl(data);
-////                                        vModel.address = getAddress(data);
-//                                        vModel.companyid = getCompanyId(data);
-//                                        vModel.pemail = getEmail(data);
-//                                        vModel.hp = getHp(data);
-//                                        vModel.ic = getIc(data);
-//                                        vModel.id = getId(data);
-//                                        vModel.position= getPosition(data);
 
                                         details.hostModels.add(vModel);
                                         toLog("name: "+vModel.name);
@@ -152,73 +139,6 @@ public class Host implements Runnable {
 
             }
         };
-    }
-
-    //TODO: create methods to get all elements in HostModel
-
-    private String getName(String data){
-        int btm = data.indexOf("name=");
-        int upp = data.indexOf(", ic");
-        String name = data.substring(btm+5, upp);
-        toLog("name: "+name);
-        return name;
-    }
-
-    private String getPhotoUrl(String data){
-        int btm = data.indexOf("imgpath=");
-        int upp = data.indexOf(", companyid");
-        String photolink = data.substring(btm+8, upp);
-        toLog("photo url: "+photolink);
-        return photolink;
-    }
-
-//    private String getAddress(String data){
-//        int btm = data.indexOf("address=");
-//        int upp = data.indexOf(", id");
-//        String address = data.substring(btm+8, upp);
-//        return address;
-//    }
-
-    private String getCompanyId(String data){
-        int btm = data.indexOf("companyid=");
-        int upp = data.indexOf(", hp");
-        String company = data.substring(btm+10, upp);
-        return company;
-    }
-
-    private String getEmail(String data){
-        int btm = data.indexOf("pemail=");
-        int upp = data.indexOf(", name");
-        String email = data.substring(btm+7, upp);
-        return email;
-    }
-
-    private String getHp(String data){
-        int btm = data.indexOf("hp=");
-        int upp = data.indexOf("}");
-        String hp = data.substring(btm+3, upp);
-        return hp;
-    }
-
-    private String getIc(String data){
-        int btm = data.indexOf("ic=");
-        int upp = data.indexOf(", position");
-        String ic = data.substring(btm+3, upp);
-        return ic;
-    }
-
-    private String getId(String data){
-        int btm = data.indexOf("id=");
-        int upp = data.indexOf(", pemail");
-        String id = data.substring(btm+3, upp);
-        return id;
-    }
-
-    private String getPosition(String data){
-        int btm = data.indexOf("position=");
-        int upp = data.indexOf(", imgpath");
-        String position = data.substring(btm+9, upp);
-        return position;
     }
 
     private void toLog(String msg){
